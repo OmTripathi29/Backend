@@ -6,7 +6,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["email", "mobile", "password", "confirm_password"]
+        fields = ["email", "mobile", "password", "confirm_password","is_verified"]
         extra_kwargs = {
             "password": {"write_only": True},
         }
@@ -24,5 +24,19 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
+    email=serializers.EmailField()
     mobile = serializers.CharField()
     password = serializers.CharField()
+    
+class verifyEmailSerializer(serializers.Serializer):
+    email=serializers.EmailField()
+    otp=serializers.CharField(max_length=6)
+    
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(min_length=6, write_only=True)
+    

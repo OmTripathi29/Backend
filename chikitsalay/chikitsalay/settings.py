@@ -44,6 +44,7 @@ EXTERNAL_APPS=[
        "rest_framework",
        "rest_framework.authtoken",
        "accounts",
+       "hospital",
        
     
 ]
@@ -138,3 +139,12 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "om@devflowmedia.com"
 EMAIL_HOST_PASSWORD = "lijjfksmpgdwyldc"
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10, 
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    
+}

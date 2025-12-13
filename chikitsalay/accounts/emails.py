@@ -23,11 +23,12 @@ def send_otp_via_email(email):
     user_obj.otp_attempts = 0 
     user_obj.save()
     try:
-        sg = SendGridAPIClient(os.environ.get("API_KEY"))
+        """sg = SendGridAPIClient(os.environ.get("API_KEY"))
         response = sg.send(message)
         print(response.status_code)
         print(response.body)
-        print(response.headers)
+        print(response.headers)"""
+        pass
     except Exception as e:
         print(str(e))
     

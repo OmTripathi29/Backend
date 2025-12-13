@@ -4,19 +4,32 @@ from django.conf import settings
 from .models import User
 from django.utils import timezone
 from datetime import timedelta
-import threading
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 def send_otp_via_email(email):
-    subject = "Verify your email"
+    
     otp=random.randint(100000, 999999)
-    message = f"Your OTP for email verification is: {otp}"
-    email_from = settings.EMAIL_HOST_USER
+    message = Mail(
+        from_email=os.environ.get("DEFAULT_FROM_EMAIL", "om@devflowmedia.com"),
+        to_email=email,
+        subject="Verify Your Email",
+        
+    )
     user_obj=User.objects.get(email=email)
     user_obj.otp=otp
     user_obj.otp_created_at = timezone.now()
     user_obj.otp_attempts = 0 
     user_obj.save()
-    threading.Thread(target=send_mail, args=(subject, message, email_from, [email])).start()
+    try:
+        sg = SendGridAPIClient("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")
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(str(e))
     
 def is_otp_expired(user):
     if not user.otp_created_at:
@@ -34,5 +47,5 @@ def forget_password_email(email):
     user_obj.otp_created_at = timezone.now()
     user_obj.otp_attempts = 0 
     user_obj.save()
-    threading.Thread(target=send_mail, args=(subject, message, email_from, [email])).start()
+    
     

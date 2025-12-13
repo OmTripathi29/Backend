@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -91,7 +92,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES['default'] = dj_database_url.parse("postgresql://backend_d3il_user:zFnytoCyw6zAMmxtld3wkJ4t8vvM5Qen@dpg-d4nusii4d50c73a0trtg-a.singapore-postgres.render.com/backend_d3il")
+DATABASES['default'] = dj_database_url.parse("postgresql://chikitsalay_db_user:eUJmvB3QjnbeW7GY5QTLLr91RgZ5Ylwc@dpg-d4uslqggjchc73cgkkog-a.singapore-postgres.render.com/chikitsalay_db")
 
 
 # Password validation
@@ -135,12 +136,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "om@devflowmedia.com"
-EMAIL_HOST_PASSWORD = "lijjfksmpgdwyldc"
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+DEFAULT_FROM_EMAIL = "om@devflowmedia.com"
+SENDGRID_API_KEY = "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"
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',

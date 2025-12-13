@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HospitalService
+from .models import HospitalService,Service,Hospital
 
 
 class HospitalServiceSearchSerializer(serializers.ModelSerializer):
@@ -35,3 +35,27 @@ class HospitalServiceSearchSerializer(serializers.ModelSerializer):
             "longitude",
             "distance_km",
         ]
+class ServiceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ["id", "name"]
+
+
+class HospitalCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hospital
+        fields = [
+            "id",
+            "name",
+            "address",
+            "phone",
+            "latitude",
+            "longitude",
+            "rating"
+        ]
+
+
+class HospitalServiceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HospitalService
+        fields = ["id", "hospital", "service", "price"]

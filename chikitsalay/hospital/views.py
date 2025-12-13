@@ -4,13 +4,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
-from .models import Service, HospitalService
-from .serializers import HospitalServiceSearchSerializer
+from .models import Service, HospitalService, Hospital
+from .serializers import HospitalServiceSearchSerializer, ServiceCreateSerializer, HospitalCreateSerializer, HospitalServiceCreateSerializer
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])  
+##@permission_classes([IsAuthenticated])  
 def hospital_search(request):
     service_query = request.query_params.get("service")
     lat = request.query_params.get("lat")
@@ -76,4 +77,77 @@ def haversine(lat1, lon1, lat2, lon2):
     return 6371 * acos(
         cos(lat1) * cos(lat2) * cos(lon2 - lon1) +
         sin(lat1) * sin(lat2)
+    )
+
+@api_view(['POST','GET'])
+##@permission_classes([IsAuthenticated])
+def add_service(request):
+    
+    if request.method == "GET":
+        services = Service.objects.all().order_by("name")
+        serializer = ServiceCreateSerializer(services, many=True)
+        return Response(serializer.data, status=200)
+    serializer = ServiceCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Service added successfully", "data": serializer.data}, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+##@permission_classes([IsAuthenticated])
+def add_hospital(request):
+    serializer = HospitalCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Hospital added successfully", "data": serializer.data}, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+##@permission_classes([IsAuthenticated])
+def add_hospital_service(request):
+    serializer = HospitalServiceCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Hospital service added successfully", "data": serializer.data}, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['GET'])
+def get_all_hospitals(request):
+    hospitals = Hospital.objects.all().order_by("name")
+    serializer = HospitalCreateSerializer(hospitals, many=True)
+    return Response(serializer.data, status=200)
+
+@api_view(["PUT", "PATCH"])
+@permission_classes([IsAuthenticated])
+def update_hospital(request, hospital_id):
+
+
+    hospital = get_object_or_404(Hospital, id=hospital_id)
+
+    serializer = HospitalCreateSerializer(
+        hospital,
+        data=request.data,
+        partial=(request.method == "PATCH")
+    )
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {
+                "message": "Hospital updated successfully",
+                "data": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_hospital(request, hospital_id):
+    hospital = get_object_or_404(Hospital, id=hospital_id)
+    hospital.delete()
+    return Response(
+        {"message": "Hospital deleted successfully"},
+        status=status.HTTP_204_NO_CONTENT
     )

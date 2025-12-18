@@ -49,6 +49,7 @@ EXTERNAL_APPS=[
        "rest_framework.authtoken",
        "accounts",
        "hospital",
+       "doctors"
        
     
 ]

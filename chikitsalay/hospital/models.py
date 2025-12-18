@@ -3,13 +3,30 @@ from django.db import models
 # Create your models here.
 class Hospital(models.Model):
     
+    GOVERNMENT = "GOVT"
+    PRIVATE = "PRIVATE"
+
+    HOSPITAL_TYPE_CHOICES = [
+        (GOVERNMENT, "Government"),
+        (PRIVATE, "Private"),
+    ]
+    
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True)
     phone = models.CharField(max_length=30, blank=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    
 
     rating = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
+    
+    
+    hospital_type = models.CharField(
+        max_length=10,
+        choices=HOSPITAL_TYPE_CHOICES,
+        default=PRIVATE,
+        db_index=True,
+    )
 
     def __str__(self) -> str:
         return self.name

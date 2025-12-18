@@ -4,32 +4,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 
-from .models import Doctor, DoctorHospital, DoctorSchedule, DoctorLeave
+from .models import Doctor, DoctorHospital, DoctorSchedule, DoctorLeave,Specialization
 from .serializers import (
     DoctorSerializer,
     DoctorHospitalSerializer,
     DoctorScheduleSerializer,
     DoctorLeaveSerializer,
+    SpecializationSerializer,
 )
 
-@api_view(["GET", "POST"])
-#@permission_classes([IsAuthenticated])
-def doctors_view(request):
 
-    if request.method == "GET":
-        doctors = Doctor.objects.filter(is_active=True)
-        serializer = DoctorSerializer(doctors, many=True)
-        return Response(serializer.data)
-
-    if request.method == "POST":
-        serializer = DoctorSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
-    
-@api_view(["GET", "POST"])
-#@permission_classes([IsAuthenticated])
 def doctors_view(request):
 
     if request.method == "GET":
@@ -101,4 +85,28 @@ def delete_doctor_leave(request, leave_id):
     leave = get_object_or_404(DoctorLeave, id=leave_id)
     leave.delete()
     return Response({"message": "Leave removed"}, status=204)
+
+@api_view(["GET", "POST"])
+#@permission_classes([IsAuthenticated])
+def specializations_view(request):
+
+    # 🟦 GET → list all specializations
+    if request.method == "GET":
+        specializations = Specialization.objects.all().order_by("name")
+        serializer = SpecializationSerializer(specializations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # 🟩 POST → create new specialization
+    elif request.method == "POST":
+        serializer = SpecializationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "message": "Specialization added successfully",
+                    "data": serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

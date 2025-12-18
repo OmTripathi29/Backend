@@ -7,13 +7,16 @@ from .views import (
     delete_doctor_schedule,
     add_doctor_leave,
     delete_doctor_leave,
+    specializations_view,
 )
 
 urlpatterns = [
     # Doctor CRUD
     path("doctors/", doctors_view),
     path("doctors/<int:doctor_id>/", doctor_detail_view),
-
+    
+    #Specialization CRUD can be added here later
+    path("specializations/", specializations_view, name="specializations"),
     # Doctor ↔ Hospital
     path("assign-hospital/", assign_doctor_to_hospital),
 

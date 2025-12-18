@@ -112,7 +112,7 @@ def specializations_view(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def doctor_specializations_view(request):
     """
     GET  -> list doctor-specialization mappings

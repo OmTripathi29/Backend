@@ -8,6 +8,7 @@ from .views import (
     add_doctor_leave,
     delete_doctor_leave,
     specializations_view,
+    doctor_specializations_view,
 )
 
 urlpatterns = [
@@ -19,6 +20,8 @@ urlpatterns = [
     path("specializations/", specializations_view, name="specializations"),
     # Doctor ↔ Hospital
     path("assign-hospital/", assign_doctor_to_hospital),
+    # Doctor ↔ Specializations
+    path("doctor-specializations/", doctor_specializations_view, name="doctor-specializations"),
 
     # Schedule
     path("schedule/add/", add_doctor_schedule),

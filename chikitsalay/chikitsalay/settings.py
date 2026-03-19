@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-
 import os
+from dotenv import load_dotenv  
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,7 +51,8 @@ EXTERNAL_APPS=[
        "rest_framework.authtoken",
        "accounts",
        "hospital",
-       "doctors"
+       "doctors",
+       "blogs",
        
     
 ]
@@ -95,7 +98,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES['default'] = dj_database_url.parse("postgresql://chikitsalay_db_user:eUJmvB3QjnbeW7GY5QTLLr91RgZ5Ylwc@dpg-d4uslqggjchc73cgkkog-a.singapore-postgres.render.com/chikitsalay_db")
+DATABASES['default'] = dj_database_url.parse("postgresql://chikitsalay_db_bv0b_user:L1otVVc0vwOHrJ1POPiFIbOl3CLVLHaq@dpg-d6kqoahaae7s73ak0i80-a.singapore-postgres.render.com/chikitsalay_db_bv0b")
 
 
 # Password validation
@@ -133,15 +136,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-DEFAULT_FROM_EMAIL = "om@devflowmedia.com"
-SENDGRID_API_KEY =os.environ.get("API_KEY")
+##EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+##DEFAULT_FROM_EMAIL = "om@devflowmedia.com"
+##SENDGRID_API_KEY =os.environ.get("API_KEY")
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER=os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD=os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS=True
+
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',

@@ -5,10 +5,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-
 from .models import Service, HospitalService, Hospital
 from .serializers import HospitalServiceSearchSerializer, ServiceCreateSerializer, HospitalCreateSerializer, HospitalServiceCreateSerializer
-
 
 @api_view(['GET'])
 ##@permission_classes([IsAuthenticated])  
@@ -37,16 +35,12 @@ def hospital_search(request):
         return Response([], status=200)
     
     service = services.first()
-
-
     hospital_services = HospitalService.objects.filter(service=service).select_related('hospital')
-
     results = []
     for hs in hospital_services:
         h = hs.hospital
         distance = haversine(user_lat, user_lon, float(h.latitude), float(h.longitude))
         hs.distance_km = round(distance, 3)
-
         if max_distance_km:
             try:
                 max_dist = float(max_distance_km)

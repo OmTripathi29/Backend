@@ -161,9 +161,7 @@ def reset_password(request):
             {"message": "Password reset successful."},
             status=status.HTTP_200_OK
         )
-        
-      
-        
+         
     except Exception as e:
         return Response(
             {"error": str(e)},

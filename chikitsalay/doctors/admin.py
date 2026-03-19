@@ -7,3 +7,4 @@ admin.site.register(DoctorSpecialization)
 admin.site.register(DoctorHospital)
 admin.site.register(DoctorSchedule)
 
+

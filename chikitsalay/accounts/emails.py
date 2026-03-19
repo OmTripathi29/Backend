@@ -5,30 +5,24 @@ from .models import User
 from django.utils import timezone
 from datetime import timedelta
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def send_otp_via_email(email):
-    
     otp=random.randint(100000, 999999)
-    message = Mail(
-        from_email=os.environ.get("DEFAULT_FROM_EMAIL", "om@devflowmedia.com"),
-        to_email=email,
-        subject="Verify Your Email",
-        
-    )
     user_obj=User.objects.get(email=email)
     user_obj.otp=otp
     user_obj.otp_created_at = timezone.now()
     user_obj.otp_attempts = 0 
     user_obj.save()
     try:
-        """sg = SendGridAPIClient(os.environ.get("API_KEY"))
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)"""
-        pass
+        send_mail(
+        subject="Your OTP for email verification",
+        message=f"Your OTP for email verification is: {otp}",
+        from_email=os.environ.get("EMAIL_HOST_USER"),
+        recipient_list=[email],
+        fail_silently=False)
     except Exception as e:
         print(str(e))
     
@@ -39,13 +33,23 @@ def is_otp_expired(user):
     return timezone.now() > expiration_time
 
 def forget_password_email(email):
-    subject = "Reset your password"
     otp=random.randint(100000, 999999)
-    message = f"Your OTP for password reset is: {otp}"
-    email_from = settings.EMAIL_HOST_USER
     user_obj=User.objects.get(email=email)
-    user_obj.otp=otp
+    
     user_obj.otp_created_at = timezone.now()
+    try:
+        print("Attempting to send OTP email...")
+        send_mail(
+        subject="Password reset",
+        message=f"Your OTP for password reset is: {otp}",
+        from_email=os.environ.get("EMAIL_HOST_USER"),
+        recipient_list=[email],
+        fail_silently=False)
+        user_obj.otp=otp
+        user_obj.otp_attempts +=1
+        return user_obj.save()
+    except Exception as e:
+        print(str(e))
     user_obj.otp_attempts = 0 
     user_obj.save()
     

@@ -3,7 +3,7 @@ import chikitsalay.settings as settings
 from django.core.validators import FileExtensionValidator
 class Blog(models.Model):
     
-    blog_image=models.ImageField(upload_to='blog/images/', null=True, blank=True,validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png','webp'])])
+    blog_image=models.ImageField(upload_to='blog/images/', null=True, blank=True,validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png','webp'],)])
     author=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='blogs')
     title = models.CharField(max_length=200)
     content = models.TextField()

@@ -9,6 +9,11 @@ from django.utils import timezone
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = (
+        ('ADMIN', 'Admin'), 
+        ('PATIENT', 'Patient'), 
+        ('DOCTOR', 'Doctor'),)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES,default='PATIENT')
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
     otp = models.CharField(max_length=6, blank=True, null=True)

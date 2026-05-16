@@ -1,21 +1,39 @@
 from django.db import models
 from hospital.models import Hospital
+from django.conf import settings
 
 
 class Doctor(models.Model):
+    
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE,
+        related_name="doctor_profile",
+        null=True, blank=True
+        )
     name = models.CharField(max_length=255)
-
-    # Image upload (stored locally or cloud later)
     profile_image = models.ImageField(
         upload_to="doctors/profile_images/",
         blank=True,
         null=True
     )
-
     experience_years = models.PositiveIntegerField(null=True, blank=True)
     about = models.TextField(blank=True)
 
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    registration_number = models.CharField(max_length=100, unique=True, null=True, blank=True)  
+    registration_certificate = models.FileField(
+        upload_to="doctors/registration_certificates/",blank=True, null=True)
+    
+    clinic_address = models.TextField(blank=True,null=True)
+    clinic_name = models.CharField(max_length=255, blank=True,null=True)
+    
+    is_verified = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False)    
+    
+    is_active = models.BooleanField(default=True)   
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

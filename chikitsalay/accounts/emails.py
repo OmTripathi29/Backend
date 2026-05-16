@@ -17,9 +17,12 @@ def send_otp_via_email(email):
     user_obj.otp_attempts = 0 
     user_obj.save()
     try:
+        print(os.environ.get("EMAIL_HOST_USER")),
+        print(os.environ.get("EMAIL_HOST_PASSWORD")),
         send_mail(
         subject="Your OTP for email verification",
         message=f"Your OTP for email verification is: {otp}",
+        
         from_email=os.environ.get("EMAIL_HOST_USER"),
         recipient_list=[email],
         fail_silently=False)

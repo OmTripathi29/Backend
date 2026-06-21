@@ -54,6 +54,7 @@ EXTERNAL_APPS=[
        "hospital",
        "doctors",
        "blogs",
+       "patient"
        
     
 ]
@@ -99,7 +100,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES['default'] = dj_database_url.parse("postgresql://chikitsalay_user:UUNyjk9WZ4g1XZv15YsLKjKPm8Qobi2B@dpg-d840qnrrjlhs73crr5i0-a.singapore-postgres.render.com/chikitsalay_postgres_db")
+DATABASES['default'] = dj_database_url.parse("postgresql://chikitsalay_db_2gzq_user:No3txnibmXXEB2NH8fu7HiYv1OIcAOBR@dpg-d8s0eo67r5hc73esvbig-a.singapore-postgres.render.com/chikitsalay_db_2gzq")
 
 
 
